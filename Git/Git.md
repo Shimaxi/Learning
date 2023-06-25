@@ -8,15 +8,25 @@ Gitとは一言で言ってしまうと超便利な『バージョン管理シ�
 
 特に後述する『ブランチ』という概念により、多人数が同じプログラムを同時に弄ったりした時であっても、誰が何を弄ったのかの記録が残り、バージョンがこんがらがらないようにしてくれます。
 
+# GitとGitHubの初期設定
+こちらの資料を参考にしました。
+>【Windows】Gitの環境構築をしよう！
+>https://prog-8.com/docs/git-env-win
+
+構築が大体できたら、GitHubのデフォルトブランチ名が"master"から"main"になったことに合わせて、git上でも
+```
+git config --global init.defaultBranch main
+```
+でデフォルトのブランチ名を変更しておいてください。
+(いや、しなくてもいいんだけど、なんかしといた方が良いみたいなの見て、いやどうなんだろ...分からん...)
 
 # Gitの基本操作(一人向け)
 
 まずは一人でgitの作業をすることを考えて、基本的な操作についてまとめていきます。
 
-# ローカルなフォルダをGithubにアップロードする方法
+# ローカルのフォルダをGithubにアップロードする方法
 
 直近でやる必要があったので、ここから説明していきます。
-
 
 ## cd ○○
 まず、gitbashを起動します。そうしたら、自分がアップロードしたいファイルがあるフォルダに行きましょう。
@@ -43,9 +53,22 @@ git init
 
 コマンドラインに『(main)』というのがくっつくと思います。
 
+## git remote add origin
+
+そうしたら、このローカルリポジトリをどこに向かって送るかを設定します。
+
+ここでgithubの出番です。アップロードしたいgithub上の『リモートリポジトリ』のURLを持ってきて、コンピュータに教えてあげましょう。
+
+楽な方法は、githubでリポジトリの画面を開き、『<> Code』とある場所をクリックし、『https~』をコピーしましょう。
+そしてgitbashで
+```
+git remote add origin https://github.com/GitHubのユーザ名/GitHubのリポジトリ名.git
+```
+とすることで、ファイルの送り先を設定します。
+
 ## git add
 
-そうしたら、githubに送りたいファイルをコンピュータに教えます。
+次にリモートリポジトリに送りたいファイルをコンピュータに教えます。
 ```
 git add test.txt
 ```
@@ -64,19 +87,6 @@ git commit -m "Intial commit"
 ```
 なのでこのようにして、メッセージを添付してあげます。
 
-## git remote add
-
-そうしたら、このローカルリポジトリをどこに向かって送るかを設定します。
-
-ここでgithubの出番です。アップロードしたいgithubで作った『リモートリポジトリ』のURLを持ってきて、コンピュータに教えてあげましょう。
-
-楽な方法は、githubでリポジトリの画面を開き、『<> Code』とある場所をクリックし、『https~』をコピーしましょう。
-そしてgitbashで
-```
-git remote add origin https://github.com/GitHubのユーザ名/GitHubのリポジトリ名.git
-```
-とすることで、ファイルの送り先を設定します。
-
 ## git push
 
 最後に送信を行います。
@@ -90,12 +100,65 @@ git push origin main
 この一連の作業を『誰かに贈り物を送る』ことに例えてみると
 
 - "git init"で自分の住所を書き
+- "git remote add"で相手の住所を書き
 - "git add"で贈り物を封筒に入れ
 - "git commit -m"で手紙を書き
-- "git remote add"で相手の住所を書き
 - "git push"でポストに投函
 
 となります。この例えどうでしょうか？(誰に聞いてるんだ)
 
-# 
+ちなみに一度やると"git init"と"git remote add"は省略可能になります。場所を変更したい場合は同じやり方で上書きが出来るので安心してください。
 
+# リモートリポジトリからローカルリポジトリにファイルを持ってくる
+
+ローカルリポジトリをリモートリポジトリに同期させる方法について学びます。
+
+## git fetch
+リモートリポジトリのコミット履歴を取得するコマンドです。
+
+```
+git fetch
+```
+
+## git merge
+
+git fetchで取得したコミット履歴情報を元にローカルリポジトリとリモートリポジトリを同一の物に合わせます。
+```
+git merge
+```
+
+この際、リモートリポジトリにはなくてローカルリポジトリにあるものは容赦なく消されるので気をつけてください。
+
+## git pull
+
+上のgit fechとgit mergeを一緒にやってくれるコマンドです。(正直これだけでよくね？と思ったけど、そうではないらしい)
+
+```
+git pull origin main
+```
+とします。pushの時と同じです。一応pushとpullで対応してるみたいです。
+
+## 間違えてpullしてデータが消えた時
+間違えてpullしちゃってデータが消えた時も安心してください。gitにコミット履歴が残るということは、そこから復元することも可能ということです。
+
+pullの取り消しとは要するに、リモートブランチのマージを取り消すことなので、マージする前に遡ってあげればよいということになります。
+
+```
+git reflog
+```
+と打ち込みましょう。すると
+```
+321dd75 (origin/master, master) HEAD@{0}: merge: merging origin/master to master
+321dd75 (origin/prod, prod)     HEAD@{1}: checkout: moving from temp to prod
+eceee42 (origin/tmp, tmp)       HEAD@{2}: commit: fix the form bug.
+321dd75 (origin/prod, prod)     HEAD@{3}: reset: moving to prod.
+321dd75 (origin/prod, prod)     HEAD@{4}: checkout: moving from prod to temp
+...
+```
+といったものが出てくるはずです。
+そしたら、mergeの前に戻る、つまりHEAD@{1}に戻れば良いということなので
+
+```
+git reset --hard HEAD@{1}
+```
+と打ち込んであげるとあら不思議、ローカルリポジトリにファイルが戻ってきます。
