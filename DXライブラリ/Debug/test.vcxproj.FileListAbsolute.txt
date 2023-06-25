@@ -1,0 +1,2 @@
+C:\Users\makik\Documents\Learning\test\Debug\test.exe
+C:\Users\makik\Documents\Learning\DXライブラリ\Debug\test.exe
