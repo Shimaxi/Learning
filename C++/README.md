@@ -211,6 +211,51 @@ int main()
 
 # 8. if文
 
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    if (10) {
+        cout << "Execute because it is non-zero\n";
+        cout << "The second line can also be executed by {} \n";
+    }
+    
+    int x;
+    cout << "Put any number you like in x\n";
+    cin >> x;
+    if (x == 10){
+        cout << "x is 10\n";
+    }
+    if (x != 5){
+        cout << "x is not 5\n";
+    }
+    if (x > 5 && x < 20){
+        cout << "x is between 5 and 20\n";
+    }
+    if (x < 0 || x > 5){
+        cout << "x is more than 5 or less than 0\n";
+    }
+
+    int y = 15;
+
+    if (x == y){
+        cout << "x is y\n";
+    } else {
+        cout << "x is not y\n";
+    }
+
+    if (x == y){
+        cout << "x is y\n";
+    } else if (x > y){
+        cout << "x is more than y\n";
+    } else{
+        cout << "x is less than y\n";
+    }
+}
+```
+
 ## if (10) 
 C++でif文を使う場合、条件式を()の中に書くことで、それを実行するかどうか決められます。実行する中身は後ろに{}を付けて書きます。付けなくても良いのですが、付けないとifの後ろにある1行までしか影響が及ばないので、可読性のためにも書いておく方が丸いです。
 
@@ -541,6 +586,34 @@ int main()
 
 じゃあ、その値のアドレスが分かっちゃえば、それ使って情報を持ってこれるんじゃないか、ということで登場するのが『ポインタ』という概念です。
 
+```cpp
+#include <iostream>
+using namespace std;
+
+void nibai(int *x);
+
+int main()
+{
+    int num = 10;
+    cout << "The number is " << num << "\n";
+    cout << "The number's address is "<< &num << "\n";
+    int *p;
+    p = &num;
+    cout << "The number's address is "<< p << "\n";
+    cout << "The number is "<< *p << "\n";
+
+    nibai(&num);
+    cout << "The number is "<< num << " !!!\n";
+    return 0;
+}
+
+void nibai(int *x){
+    *x *= 2;
+}
+
+```
+
+
 ## int *p;
 値を扱いたいときであっても、ポインタを扱いたいときであってもやはり最初は型宣言からです。
 
@@ -588,6 +661,36 @@ cout << "The number is "<< num << "\n";
 構造体とは、任意の型の要素をまとめるために使う便利なデータブロックです。
 
 例として名前とHPと攻撃力と防御力を持つゲームのキャラクターを構造体を用いて扱ってみましょう。
+
+```cpp
+#include <iostream>
+using namespace std;
+
+struct Character{
+    char name[128];
+    int hp;
+    int power;
+    int defence;
+};
+
+void status(struct Character x){
+    cout << "HP: " << x.hp << "\n";
+}
+
+int main()
+{
+    struct Character takashi = {"Takashi", 10, 15, 5};
+    cout << "Name: " << takashi.name << "\n";
+
+    status(takashi);
+
+    struct Character *p;
+    p = &takashi;
+    cout << "Power: " << (*p).power << "\n";
+    cout << "Defence: " << p->hp << "\n";
+    return 0;
+}
+```
 
 ## struct Character{};
 "struct ○○"という形で構造体は宣言されます。"{}"の中に必要な様々な型のデータを投入していきます。最後にセミコロン書くのを忘れないように。
