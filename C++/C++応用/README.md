@@ -50,10 +50,9 @@ int main(){
     
     // 10進数を6進数に変換
     string ans = "";
-    int amari = 0;
     while (sum > 0){
-        int remainder = sum % 6;
-        ans = (char)(48 + remainder) + ans;
+        int amari = sum % 6;
+        ans = (char)(48 + amari) + ans;
         sum /= 6;
     }
     cout << ans << endl;
