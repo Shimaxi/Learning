@@ -159,6 +159,7 @@ git reset --hard HEAD^
 git fetch
 ```
 
+
 ## git merge
 
 git fetchで取得した情報を元にを元にローカルリポジトリとリモートリポジトリを同一の物に合わせます。
